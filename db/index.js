@@ -109,6 +109,41 @@ function addRole(){
     })
 }
 
+// to add employee
+
+function addEmployee(){
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Enter the new employee's first name.",
+            name: "empFirst"
+        },{
+            type: "input",
+            message: "Enter the employee's last name.",
+            name: "empLast"
+        },{
+            type: "input",
+            message: "Enter the new employee's role ID.",
+            name: "newRoleID"
+        },{
+            type: "input",
+            message: "Emter the new employee's manager ID.",
+            name: "newRoleManID"
+        }
+    ]).then(answers => {
+        connection.query("INSERT INTO role SET ?",
+        {
+            title:answers.empRole,
+            salary:answers.empSalary,
+            departmentID:answers.deptID
+        }, function(err){
+            if(err) throw err;
+            console.log("Created role.");
+            init()
+        })
+    })
+}
+
 
 
 
