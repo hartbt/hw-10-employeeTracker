@@ -133,18 +133,63 @@ function addEmployee(){
     ]).then(answers => {
         connection.query("INSERT INTO role SET ?",
         {
-            title:answers.empRole,
-            salary:answers.empSalary,
-            departmentID:answers.deptID
+            firstName:answers.empFirst,
+            lastName:answers.empLast,
+            roleID:answers.newRoleID,
+            managerID:answers.newRoleManID
         }, function(err){
             if(err) throw err;
-            console.log("Created role.");
+            console.log("Created employee.");
             init()
         })
     })
 }
 
+// to update role
 
+function updateRole(){
+    connection.query("SELECT * FROM role", function(err, results){
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                type: "list",
+                mesage: "Select a role to update.",
+                name: "choice",
+                choices: function(){
+                    var choiceArr = []
+                    for (var i = 0; i < results.length; i++){
+                        choiceArr.push(results[i].title)
+                    } return choiceArr
+                }
+            },{
+                type: "input",
+                message: "Enter the ID of the employee that you would like to update.",
+                name: "empID"
+            }
+        ]).then(function(answer){
+            var chosenItem;
+            for ( var i = 0; i < results.length; i++){
+                if (results[i].title === answer.choice){
+                    chosenItem = results[i]
+                }
+            }
+
+            connection.query("UPDATE employee SET ? WHERE ?",
+            [
+                {
+                    roleID:chosenItem.id
+                },{
+                    id:answer.empID
+                }
+            ], function(error){
+                if(error) throw err;
+                console.log("Role updated.")
+                init();
+            })
+        })
+    })
+}
 
 
 
