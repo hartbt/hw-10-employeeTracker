@@ -7,11 +7,11 @@ const connection = mysql.createConnection({
     user: "root",
     password: "HaHaidkman!",
     database: "employeeDB"
-})
+});
 
 connection.connect(function(err){
     if(err) throw err
-    index.init();
-})
+    init();
+});
 
 module.exports = connection
