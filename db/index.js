@@ -1,10 +1,33 @@
-// establishing Figlet
 const mysql = require("mysql")
 const inquirer = require("inquirer")
+var express = require('express');
+var app = express();
+const PORT = process.env.PORT || 3306
+
+app.get('/', function (req, res) {
+  res.send('Hello World!'); // This will serve your request to '/'.
+});
+
+app.listen(8000, function () {
+  console.log("Example app listening on port: " + PORT);
+ });
+
+
+var connection = mysql.createConnection({
+    host: "localhost",
+    port: "3306",
+    user: "root",
+    password: "HaHaidkman!",
+    database: "employeeDB"
+});
+
+connection.connect(function(err){
+    if(err) throw err
+    init();
+});
+
 
 const figlet = require("figlet")
-const { allowedNodeEnvironmentFlags } = require("process")
-const connection = require("./connection")
 figlet("EMPLOYEE MANAGER", function(err, data){
     if(err) {
         console.log("Something went wrong")
@@ -57,24 +80,27 @@ function employee(){
     connection.query("SELECT * FROM employee", function(err, result){
         if(err) throw err
         console.table(result)
+        exit()
     })
 }
 
 // to view roles
 
 function role(){
-    connection.query("SELECT * FROM role", function(err, result){
+    connection.query("SELECT * FROM empRole", function(err, result){
         if(err) throw err
         console.table(result)
+        exit()
     })
 }
 
 // to view departments
 
 function department(){
-    connection.query("SELECT * FROM employee", function(err, result){
+    connection.query("SELECT * FROM department", function(err, result){
         if(err) throw err
         console.table(result)
+        exit()
     })
 }
 
@@ -96,7 +122,7 @@ function addRole(){
             name: "deptID"
         }
     ]).then(answers => {
-        connection.query("INSERT INTO role SET ?",
+        connection.query("INSERT INTO empRoleclea SET ?",
         {
             title:answers.empRole,
             salary:answers.empSalary,
@@ -104,7 +130,7 @@ function addRole(){
         }, function(err){
             if(err) throw err;
             console.log("Created role.");
-            init()
+            exit()
         })
     })
 }
@@ -131,7 +157,7 @@ function addEmployee(){
             name: "newRoleManID"
         }
     ]).then(answers => {
-        connection.query("INSERT INTO role SET ?",
+        connection.query("INSERT INTO employee SET ?",
         {
             firstName:answers.empFirst,
             lastName:answers.empLast,
@@ -140,7 +166,7 @@ function addEmployee(){
         }, function(err){
             if(err) throw err;
             console.log("Created employee.");
-            init()
+            exit()
         })
     })
 }
@@ -148,7 +174,7 @@ function addEmployee(){
 // to update role
 
 function updateRole(){
-    connection.query("SELECT * FROM role", function(err, results){
+    connection.query("SELECT * FROM empRole", function(err, results){
         if (err) throw err;
 
         inquirer.prompt([
@@ -178,19 +204,34 @@ function updateRole(){
             connection.query("UPDATE employee SET ? WHERE ?",
             [
                 {
-                    roleID:chosenItem.id
+                    deptRoleID:chosenItem.id
                 },{
                     id:answer.empID
                 }
             ], function(error){
                 if(error) throw err;
                 console.log("Role updated.")
-                init();
+                exitç();
             })
         })
     })
 }
 
+function exit(){
+    inquirer.prompt({
+        type: "list",
+        message: "Exit?",
+        name: "exitTask",
+        choices: ["Yes", "No"]
+    }).then(function(res){
+        switch (res.exitTask){
+            case "Yes":
+                init()
+                break
+            case "No":
+                exit()
+                break
+        }
+    })
+}
 
-
-module.exports = index
