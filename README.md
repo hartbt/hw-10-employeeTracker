@@ -2,7 +2,7 @@
 
 This assignment serves as an HR database. The user is able to first select which database they would like to view, and then they get the option of editing each of those databases. The application is run by the command "node index.js".
 
-
+<iframe src="https://drive.google.com/file/d/1GagTvdOh0w60W1PNX0c_elRtSEWue1jL/preview" width="640" height="480"></iframe>
 
 <strong>Link to site:</strong>  https://hartbt.github.io/hw-10-employeeTracker/
 
